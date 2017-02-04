@@ -22,7 +22,7 @@ public class SnakeController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	    _horizontalAxis = Input.GetAxisRaw("P1_Horizontal");
+	    _horizontalAxis = Input.GetAxisRaw(transform.parent.name + "_Horizontal");
 	}
 
     void FixedUpdate() {

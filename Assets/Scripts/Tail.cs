@@ -1,36 +1,68 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Tail : MonoBehaviour {
 
     public float DistanceBetweenPoints = 0.1f;
     public Transform Head;
 
+    public float ChanceBetweenGap = 35f;
+    public float TimeBetweenGap = 0.5f;
+    private bool _canDraw = true;
+
     private List<Vector2> _points;
+    private SnakeController _snakeController;
     private EdgeCollider2D _col;
     private LineRenderer _lineRenderer;
 
+    private List<Vector2> _test;
 
     // Use this for initialization
-	void Start () {
-	    _lineRenderer = GetComponent<LineRenderer>();
-	    _col = GetComponent<EdgeCollider2D>();
-	    _points = new List<Vector2>();
+    void Start () {
+        _snakeController = transform.parent.Find("Head").GetComponent<SnakeController>();
+        _lineRenderer = GetComponent<LineRenderer>();
+        _col = GetComponent<EdgeCollider2D>();
+        _points = new List<Vector2>();
         AddPoint();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	    if(Vector3.Distance(Head.position, new Vector3(_points.Last().x, _points.Last().y, 0)) >= DistanceBetweenPoints)
-	        AddPoint();
-	}
+        InvokeRepeating("InvokeCreateGap", 5f, 5f);
+    }
+
+    // Update is called once per frame
+    void Update () {
+        if(_canDraw && Vector3.Distance(Head.position, new Vector3(_points.Last().x, _points.Last().y, 0)) >= DistanceBetweenPoints)
+            AddPoint();
+    }
+
 
     void AddPoint() {
         if (_points.Count > 1) _col.points = _points.ToArray();
         _points.Add(Head.position);
         _lineRenderer.numPositions = _points.Count;
         _lineRenderer.SetPosition(_points.Count - 1, Head.position);
+    }
+
+    private void InvokeCreateGap() {
+        Debug.Log("Invoke CreateGap()");
+        StartCoroutine(CreateGap());
+    }
+
+    //TODO: Créer un décalage au niveau des points
+
+    IEnumerator CreateGap() {
+
+        if (enabled && !_snakeController.Dead && Random.Range(0, 101) <= ChanceBetweenGap) {
+            Debug.Log("Gap created");
+            _canDraw = false;
+            yield return new WaitForSeconds(TimeBetweenGap);
+            _canDraw = true;
+            var tail = Instantiate(gameObject, Vector3.zero, Quaternion.identity);
+            tail.name = "Tail " + (gameObject.transform.parent.childCount - 1);
+            tail.transform.parent = gameObject.transform.parent;
+            enabled = false;
+        }
     }
 }
