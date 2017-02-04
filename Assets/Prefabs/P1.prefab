@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4617842747349466}
   m_Layer: 0
   m_Name: P1
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -70,13 +70,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1767731702148082}
-  m_LocalRotation: {x: 0, y: 0, z: -0.9063079, w: 0.42261827}
-  m_LocalPosition: {x: -4, y: 3, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0.38268343, w: 0.92387956}
+  m_LocalPosition: {x: 4, y: -3, z: 0}
   m_LocalScale: {x: 1.180001, y: 1.1800015, z: 1.1800004}
   m_Children: []
   m_Father: {fileID: 4617842747349466}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -130}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 45}
 --- !u!4 &4617842747349466
 Transform:
   m_ObjectHideFlags: 1
@@ -167,8 +167,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DistanceBetweenPoints: 0.05
   Head: {fileID: 4201718095109904}
-  ChanceBetweenGap: 100
-  TimeBetweenGap: 0.5
+  ChanceBetweenGap: 35
+  TimeBetweenGap: 0.4
 --- !u!114 &114203697975537412
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -207,7 +207,7 @@ LineRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_Materials:
-  - {fileID: 2100000, guid: ff188ecb09059184b812fcb3f7580889, type: 2}
+  - {fileID: 2100000, guid: 4a2a42c6a2ce26c45b687fbb61cf48ac, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

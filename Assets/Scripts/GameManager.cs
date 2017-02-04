@@ -2,13 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour {
+public class GameManager : MonoSingleton<GameManager> {
+
+    public int NbPlayers = 2;
+
+    public override void Init() {
+        Debug.Log("Instance created");
+    }
 
 
 
-	// Use this for initialization
+    // Use this for initialization
     private void Start () {
-		
 	}
 
 
