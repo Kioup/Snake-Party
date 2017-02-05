@@ -23,5 +23,6 @@ public class MenuActions : MonoBehaviour {
 
     public void LaunchGame(int nbPlayers) {
         GameManager.instance.NbPlayers = nbPlayers;
+        SceneManager.instance.FadeToScene("Game");
     }
 }

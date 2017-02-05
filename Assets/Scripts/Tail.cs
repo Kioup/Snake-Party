@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 public class Tail : MonoBehaviour {
 
     public float DistanceBetweenPoints = 0.1f;
-    public Transform Head;
+    private Transform _head;
 
     public float ChanceBetweenGap = 35f;
     public float TimeBetweenGap = 0.5f;
@@ -23,6 +23,7 @@ public class Tail : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        _head = transform.parent.FindChild("Head").transform;
         _snakeController = transform.parent.Find("Head").GetComponent<SnakeController>();
         _lineRenderer = GetComponent<LineRenderer>();
         _col = GetComponent<EdgeCollider2D>();
@@ -33,16 +34,18 @@ public class Tail : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        if(_canDraw && Vector3.Distance(Head.position, new Vector3(_points.Last().x, _points.Last().y, 0)) >= DistanceBetweenPoints)
+        Debug.Log(DistanceBetweenPoints);
+        if (_canDraw && Vector3.Distance(_head.position, new Vector3(_points.Last().x, _points.Last().y, 0)) >= DistanceBetweenPoints) {
             AddPoint();
+        }
     }
 
 
     void AddPoint() {
         if (_points.Count > 1) _col.points = _points.ToArray();
-        _points.Add(Head.position);
+        _points.Add(_head.position);
         _lineRenderer.numPositions = _points.Count;
-        _lineRenderer.SetPosition(_points.Count - 1, Head.position);
+        _lineRenderer.SetPosition(_points.Count - 1, _head.position);
     }
 
     private void InvokeCreateGap() {

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Killable
   - Menu
+  - Fader
   layers:
   - Default
   - TransparentFX

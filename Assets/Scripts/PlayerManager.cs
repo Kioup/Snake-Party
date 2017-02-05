@@ -12,10 +12,12 @@ public class PlayerManager : MonoBehaviour {
     public GameObject Player4Prefab;
 
     private List<Transform> _spawnPoints;
+    private List<GameObject> _players;
 
 	// Use this for initialization
 	void Start () {
 	    _spawnPoints = new List<Transform>();
+	    _players = new List<GameObject>();
 	    foreach(GameObject go in GameObject.FindGameObjectsWithTag("Respawn"))
 	    {
             _spawnPoints.Add(go.transform);
@@ -31,8 +33,22 @@ public class PlayerManager : MonoBehaviour {
     private void SpawnPlayers(int nbPlayers) {
         for (var i = 1; i <= nbPlayers; i++) {
             var index = Random.Range(0, _spawnPoints.Count - 1);
-            var instance = Instantiate(GetNPlayerPrefab(i), _spawnPoints[index].position, Quaternion.identity);
+            var instance = Instantiate(GetNPlayerPrefab(i), Vector3.zero, Quaternion.identity);
+            _players.Add(instance);
+            instance.name = "P" + i;
+            var head = instance.transform.FindChild("Head");
+            head.GetComponent<SnakeController>().Dead = true;
+            head.position = _spawnPoints[index].position;
+            head.rotation = Quaternion.Euler(new Vector3(0,0, Random.Range(0,361)));
             _spawnPoints.RemoveAt(index);
+        }
+        StartCoroutine(StartGame());
+    }
+
+    IEnumerator StartGame(float delay = 2f) {
+        yield return new WaitForSeconds(delay);
+        foreach (var player in _players) {
+            player.transform.FindChild("Head").GetComponent<SnakeController>().Dead = false;
         }
     }
 
@@ -43,9 +59,9 @@ public class PlayerManager : MonoBehaviour {
             case 2:
                 return Player2Prefab;
             case 3:
-                return Player1Prefab;
+                return Player3Prefab;
             case 4:
-                return Player1Prefab;
+                return Player4Prefab;
             default:
                 throw new Exception("Le numéro de joueur est invalide");
         }
