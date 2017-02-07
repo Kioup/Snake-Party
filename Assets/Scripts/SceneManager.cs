@@ -9,6 +9,8 @@ public class SceneManager : MonoSingleton<SceneManager> {
 
     public float FadeTime = 1f;
 
+    public int NumberOfLevels = 2;
+
     private Animator _fadeAnim;
 
     public void FadeToScene(string sceneName, float speed = 1f) {
@@ -24,13 +26,20 @@ public class SceneManager : MonoSingleton<SceneManager> {
         UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
     }
 
-    // Use this for initialization
-	void Start () {
-	    UnityEngine.SceneManagement.SceneManager.sceneLoaded += SceneManagerOnSceneLoaded;
-	    if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "_preload") {
-	        UnityEngine.SceneManagement.SceneManager.LoadScene("Menu");
-	    }
-	}
+//    // Use this for initialization
+//	void Start () {
+//	    UnityEngine.SceneManagement.SceneManager.sceneLoaded += SceneManagerOnSceneLoaded;
+//	    if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "_preload") {
+//	        UnityEngine.SceneManagement.SceneManager.LoadScene("Menu");
+//	    }
+//	}
+
+    public override void Init() {
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded += SceneManagerOnSceneLoaded;
+        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "_preload") {
+            UnityEngine.SceneManagement.SceneManager.LoadScene("Menu");
+        }
+    }
 
     private void SceneManagerOnSceneLoaded(Scene arg0, LoadSceneMode loadSceneMode) {
         if (GameObject.FindGameObjectWithTag("Fader")) {
@@ -39,8 +48,6 @@ public class SceneManager : MonoSingleton<SceneManager> {
             _fadeAnim.Play("FadeOut");
 
         }
-        Debug.Log(arg0);
-        Debug.Log(loadSceneMode);
     }
 
 }

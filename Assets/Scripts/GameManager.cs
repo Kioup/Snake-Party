@@ -11,6 +11,15 @@ public class GameManager : MonoSingleton<GameManager> {
     }
 
 
+    public void RestartScene() {
+        StartCoroutine(RestartSceneLoop());
+    }
+
+    IEnumerator RestartSceneLoop() {
+        yield return new WaitForSeconds(4f);
+        SceneManager.instance.FadeToScene("Game" + Random.Range(1, SceneManager.instance.NumberOfLevels + 1));
+
+    }
 
     // Use this for initialization
     private void Start () {

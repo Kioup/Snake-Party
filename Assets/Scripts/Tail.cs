@@ -34,7 +34,6 @@ public class Tail : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        Debug.Log(DistanceBetweenPoints);
         if (_canDraw && Vector3.Distance(_head.position, new Vector3(_points.Last().x, _points.Last().y, 0)) >= DistanceBetweenPoints) {
             AddPoint();
         }

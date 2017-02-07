@@ -1,13 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MenuActions : MonoBehaviour {
 
     private GameObject _canvas;
 
+
+
     public void Start() {
         _canvas = GameObject.Find("Canvas");
+        ScoreManager.instance.ResetScores();
     }
 
     public void QuitGame() {
@@ -23,6 +27,7 @@ public class MenuActions : MonoBehaviour {
 
     public void LaunchGame(int nbPlayers) {
         GameManager.instance.NbPlayers = nbPlayers;
-        SceneManager.instance.FadeToScene("Game");
+        var i = Random.Range(1, SceneManager.instance.NumberOfLevels + 1);
+        SceneManager.instance.FadeToScene("Game" + i);
     }
 }
