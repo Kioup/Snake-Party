@@ -9,7 +9,7 @@ public class SceneManager : MonoSingleton<SceneManager> {
 
     public float FadeTime = 1f;
 
-    public int NumberOfLevels = 2;
+    public int NumberOfLevels = 1;
 
     private Animator _fadeAnim;
 

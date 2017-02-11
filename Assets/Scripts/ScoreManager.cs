@@ -9,7 +9,7 @@ public class ScoreManager : MonoSingleton<ScoreManager> {
     public Dictionary<string, int> Scores;
 
     public override void Init() {
-        ResetScores();
+        ResetScores(GameManager.instance.NbPlayers);
     }
 
     public void AddScoreTo(string playerName, int amount) {
@@ -23,17 +23,17 @@ public class ScoreManager : MonoSingleton<ScoreManager> {
     void Update() {
         if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name.StartsWith("Game")) {
             foreach (var pName in Scores.Keys) {
-                GameObject.Find("Score" + pName).GetComponent<Text>().text = Scores[pName].ToString();
+                var scoreGo = GameObject.Find("Score" + pName);
+                if(scoreGo.activeSelf) scoreGo.GetComponent<Text>().text = Scores[pName].ToString();
+
             }
         }
     }
 
-    public void ResetScores() {
-        Scores = new Dictionary<string, int>() {
-            {"P1", 0},
-            {"P2", 0},
-            {"P3", 0},
-            {"P4", 0}
-        };
+    public void ResetScores(int nbPlayers) {
+        Scores = new Dictionary<string, int>();
+            for (var i = 1; i <= nbPlayers; i++) {
+                Scores.Add("P" + i, 0);
+        }
     }
 }

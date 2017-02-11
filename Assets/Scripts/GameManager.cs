@@ -7,7 +7,7 @@ public class GameManager : MonoSingleton<GameManager> {
     public int NbPlayers = 2;
 
     public override void Init() {
-        Debug.Log("Instance created");
+
     }
 
 

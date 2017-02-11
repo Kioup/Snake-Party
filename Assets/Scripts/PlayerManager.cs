@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using Utils;
 using Random = UnityEngine.Random;
 
@@ -31,13 +32,41 @@ public class PlayerManager : MonoBehaviour {
             var index = Random.Range(0, _spawnPoints.Count - 1);
             var instance = Instantiate(GetNPlayerPrefab(i), Vector3.zero, Quaternion.identity);
             instance.name = "P" + i;
-            GameObject.Find("Score" + instance.name).SetActive(true);
             var head = instance.transform.FindChild("Head");
             head.GetComponent<SnakeController>().Dead = true;
             head.position = _spawnPoints[index].position;
             head.rotation = Quaternion.Euler(new Vector3(0,0, Random.Range(0,361)));
             Players.Add("P" + i, instance);
+            var arrow = head.FindChild("arrow");
+            if (arrow) {
+                arrow.GetComponent<SpriteRenderer>().color = GetColorObjectForPlayer(instance.name);
+                var lText = arrow.FindChild("TXT_DIRECTIONS_L").GetComponent<TextMesh>();
+                var rText = arrow.FindChild("TXT_DIRECTIONS_R").GetComponent<TextMesh>();
+                lText.color = GetColorObjectForPlayer(instance.name);
+                rText.color = GetColorObjectForPlayer(instance.name);
+            }
             _spawnPoints.RemoveAt(index);
+        }
+        switch (GameManager.instance.NbPlayers) {
+            case 2:
+                GameObject.Find("ScoreP1").SetActive(true);
+                GameObject.Find("ScoreP2").SetActive(true);
+                GameObject.Find("ScoreP3").SetActive(false);
+                GameObject.Find("ScoreP4").SetActive(false);
+                break;
+            case 3:
+                GameObject.Find("ScoreP1").SetActive(true);
+                GameObject.Find("ScoreP2").SetActive(true);
+                GameObject.Find("ScoreP3").SetActive(true);
+                GameObject.Find("ScoreP4").SetActive(false);
+                break;
+            case 4:
+                GameObject.Find("ScoreP1").SetActive(true);
+                GameObject.Find("ScoreP2").SetActive(true);
+                GameObject.Find("ScoreP3").SetActive(true);
+                GameObject.Find("ScoreP4").SetActive(true);
+                break;
+
         }
         StartCoroutine(StartGame());
     }
@@ -53,7 +82,9 @@ public class PlayerManager : MonoBehaviour {
     IEnumerator StartGame(float delay = 2f) {
         yield return new WaitForSeconds(delay);
         foreach (var player in Players.Values) {
-            player.transform.FindChild("Head").GetComponent<SnakeController>().Dead = false;
+            var head = player.transform.FindChild("Head");
+            head.GetComponent<SnakeController>().Dead = false;
+            Destroy(head.transform.FindChild("arrow").gameObject);
         }
 
     }
@@ -71,6 +102,14 @@ public class PlayerManager : MonoBehaviour {
             .transform.Find("Tail")
             .GetComponent<LineRenderer>()
             .material.color);
+
+    }
+
+    public Color GetColorObjectForPlayer(string playerName) {
+        return Players[playerName]
+            .transform.Find("Tail")
+            .GetComponent<LineRenderer>()
+            .material.color;
 
     }
 
