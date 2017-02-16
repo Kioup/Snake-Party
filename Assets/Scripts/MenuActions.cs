@@ -29,6 +29,6 @@ public class MenuActions : MonoBehaviour {
         GameManager.instance.NbPlayers = nbPlayers;
         ScoreManager.instance.ResetScores(nbPlayers);
         var i = Random.Range(1, SceneManager.instance.NumberOfLevels + 1);
-        SceneManager.instance.FadeToScene("Game1");
+        SceneManager.instance.FadeToScene("SPGame1");
     }
 }

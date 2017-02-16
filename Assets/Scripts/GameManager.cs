@@ -17,7 +17,7 @@ public class GameManager : MonoSingleton<GameManager> {
 
     IEnumerator RestartSceneLoop() {
         yield return new WaitForSeconds(4f);
-        SceneManager.instance.FadeToScene("Game" + Random.Range(1, SceneManager.instance.NumberOfLevels + 1));
+        SceneManager.instance.FadeToScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
 
     }
 
