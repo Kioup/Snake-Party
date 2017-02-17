@@ -21,7 +21,7 @@ public class ScoreManager : MonoSingleton<ScoreManager> {
     }
 
     void Update() {
-        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name.StartsWith("Game")) {
+        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name.Contains("Game")) {
             foreach (var pName in Scores.Keys) {
                 var scoreGo = GameObject.Find("Score" + pName);
                 if(scoreGo.activeSelf) scoreGo.GetComponent<Text>().text = Scores[pName].ToString();

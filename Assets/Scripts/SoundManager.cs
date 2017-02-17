@@ -10,7 +10,6 @@ public class SoundManager : MonoSingleton<SoundManager> {
 
 
     void Start() {
-        Debug.Log("test");
         _audiosource = GetComponent<AudioSource>();
         if (!_audiosource.isPlaying) {
             _audiosource.clip = GameMusic;
