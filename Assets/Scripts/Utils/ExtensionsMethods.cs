@@ -9,5 +9,12 @@ namespace Utils {
             colors.RemoveAt(i);
             return result;
         }
+
+        public static Transform Random(ref List<Transform> transforms) {
+            var i = UnityEngine.Random.Range(0, transforms.Count);
+            var result = transforms[i];
+            transforms.RemoveAt(i);
+            return result;
+        }
     }
 }

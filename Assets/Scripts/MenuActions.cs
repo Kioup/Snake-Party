@@ -11,7 +11,6 @@ public class MenuActions : MonoBehaviour {
 
     public void Start() {
         _canvas = GameObject.Find("Canvas");
-        ScoreManager.instance.ResetScores(GameManager.instance.NbPlayers);
     }
 
     public void QuitGame() {
@@ -27,7 +26,6 @@ public class MenuActions : MonoBehaviour {
 
     public void LaunchGame(int nbPlayers) {
         GameManager.instance.NbPlayers = nbPlayers;
-        ScoreManager.instance.ResetScores(nbPlayers);
         var i = Random.Range(1, SceneManager.instance.NumberOfLevels + 1);
         SceneManager.instance.FadeToScene("SPGame1");
     }

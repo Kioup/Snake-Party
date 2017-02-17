@@ -4,13 +4,16 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public class ScoreManager : MonoSingleton<ScoreManager> {
+public class ScoreManager : MonoBehaviour {
 
     public Dictionary<string, int> Scores;
 
-    public override void Init() {
+
+
+    public void Start() {
         ResetScores(GameManager.instance.NbPlayers);
     }
+
 
     public void AddScoreTo(string playerName, int amount) {
         Scores[playerName] += amount;

@@ -19,7 +19,6 @@ public class Tail : MonoBehaviour {
     private EdgeCollider2D _col;
     private LineRenderer _lineRenderer;
 
-    private List<Vector2> _test;
 
     // Use this for initialization
     void Start () {
@@ -34,7 +33,7 @@ public class Tail : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        if (_canDraw && Vector3.Distance(_head.position, new Vector3(_points.Last().x, _points.Last().y, 0)) >= DistanceBetweenPoints) {
+        if (!_snakeController.Dead && _canDraw && Vector3.Distance(_head.position, new Vector3(_points.Last().x, _points.Last().y, 0)) >= DistanceBetweenPoints) {
             AddPoint();
         }
     }
@@ -50,6 +49,11 @@ public class Tail : MonoBehaviour {
     private void InvokeCreateGap() {
         Debug.Log("Invoke CreateGap()");
         StartCoroutine(CreateGap());
+    }
+
+    public void ResetTail() {
+        _points = new List<Vector2>();
+
     }
 
     //TODO: Créer un décalage au niveau des points

@@ -13,7 +13,7 @@ public class PlayerManager : MonoBehaviour {
     public GameObject PlayerPrefab;
     public List<Color> AvailableColors;
 
-    private List<Transform> _spawnPoints;
+    public List<Transform> SpawnPoints;
     public Dictionary<string, GameObject> PlayersAlive;
 
     [Serializable]
@@ -27,19 +27,18 @@ public class PlayerManager : MonoBehaviour {
 
 
     public void Start() {
-        _spawnPoints = new List<Transform>();
+        SpawnPoints = new List<Transform>();
 	    PlayersAlive = new Dictionary<string, GameObject>();
 	    foreach(GameObject go in GameObject.FindGameObjectsWithTag("Respawn"))
 	    {
-            _spawnPoints.Add(go.transform);
+            SpawnPoints.Add(go.transform);
 	    }
 		SpawnPlayers(GameManager.instance.NbPlayers);
     }
 
-    private void SpawnPlayers(int nbPlayers) {
-        if(GameManager.instance.Players.ContainsKey("P1")) Debug.Log(GameManager.instance.Players["P1"].GetComponent<PlayerPrefs>().PlayerColor);
+    public void SpawnPlayers(int nbPlayers) {
         for (var i = 1; i <= nbPlayers; i++) {
-            var index = Random.Range(0, _spawnPoints.Count - 1);
+            var index = Random.Range(0, SpawnPoints.Count - 1);
             GameObject instance;
             if (GameManager.instance.NbPlayers != GameManager.instance.Players.Count) {
                 instance = Instantiate(PlayerPrefab, Vector3.zero, Quaternion.identity);
@@ -57,13 +56,12 @@ public class PlayerManager : MonoBehaviour {
             instance.GetComponent<PlayerPrefs>().PlayerColor = GameManager.instance.PlayersColors[instance.name];
             var head = instance.transform.FindChild("Head");
             head.GetComponent<SnakeController>().Dead = true;
-            head.position = _spawnPoints[index].position;
+            head.position = SpawnPoints[index].position;
             head.rotation = Quaternion.Euler(new Vector3(0,0, Random.Range(0,361)));
-            PlayersAlive.Add(instance.name, instance);
             if (GameManager.instance.NbPlayers != GameManager.instance.Players.Count) {
                 GameManager.instance.Players.Add(instance.name, instance);
             }
-            _spawnPoints.RemoveAt(index);
+            SpawnPoints.RemoveAt(index);
         }
         switch (GameManager.instance.NbPlayers) {
             case 2:
@@ -93,8 +91,14 @@ public class PlayerManager : MonoBehaviour {
         PlayersAlive.Remove(playerName);
     }
 
-    IEnumerator StartGame(float delay = 2f) {
+    public IEnumerator StartGame(float delay = 2f) {
+        Camera.main.orthographicSize = 5f;
+        Camera.main.transform.position = new Vector3(0, 0, -11);
+
         yield return new WaitForSeconds(delay);
+        foreach (var player in GameManager.instance.Players) {
+            PlayersAlive.Add(player.Key, player.Value);
+        }
         foreach (var player in PlayersAlive.Values) {
             var head = player.transform.FindChild("Head");
             head.GetComponent<SnakeController>().Dead = false;
@@ -103,12 +107,12 @@ public class PlayerManager : MonoBehaviour {
 
     }
 
-    void Update() {
-        if (PlayersAlive.Keys.Count == 1) {
-            var lastPlayerPosition = PlayersAlive.Values.First().transform.Find("Head").position;
-            Camera.main.orthographicSize = 4f;
-            Camera.main.transform.position = new Vector3(lastPlayerPosition.x, lastPlayerPosition.y, -10);
-        }
-    }
+//    void Update() {
+//        if (PlayersAlive.Keys.Count == 1) {
+//            var lastPlayerPosition = PlayersAlive.Values.First().transform.Find("Head").position;
+//            Camera.main.orthographicSize = 4f;
+//            Camera.main.transform.position = new Vector3(lastPlayerPosition.x, lastPlayerPosition.y, -11);
+//        }
+//    }
 
    }
