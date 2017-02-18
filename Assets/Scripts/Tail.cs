@@ -48,7 +48,7 @@ public class Tail : MonoBehaviour {
     }
 
     private void InvokeCreateGap() {
-        Debug.Log("Invoke CreateGap()");
+//        Debug.Log("Invoke CreateGap()");
         StartCoroutine(CreateGap());
     }
 

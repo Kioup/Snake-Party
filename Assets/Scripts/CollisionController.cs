@@ -11,15 +11,18 @@ public class CollisionController : MonoBehaviour {
     private Animator _uiAnimator;
     private PlayerManager _pm;
 
-    // TODO: Faire en sorte que lorsque la partie est fini, transition au noir, on reset les positions des joueurs etc et on ré affice le jeu, sans redémarrer la scène
 
     void OnTriggerEnter2D(Collider2D other) {
         if (other.CompareTag("Killable")) {
             GetComponent<SnakeController>().Dead = true;
             _pm = GameObject.Find("_PlayerManager").GetComponent<PlayerManager>();
-            _pm.RemovePlayer(transform.parent.name);
+            Debug.Log(_pm.PlayersAlive.Keys.Count);
+            if (_pm.PlayersAlive.Keys.Count > 1) _pm.PlayersAlive.Remove(transform.parent.name);
+            Debug.Log(_pm.PlayersAlive.Keys.Count);
+
             _animator.SetTrigger("Death");
-            if (_pm.PlayersAlive.Keys.Count == 1) {
+            if (!GameManager.instance.EndRound && _pm.PlayersAlive.Keys.Count == 1) {
+                GameManager.instance.EndRound = true;
                 _animator.SetTrigger("Win");
                 var winner = _pm.PlayersAlive.Values.First();
                 ScoreManager.instance.AddScoreTo(winner.name, 1);
@@ -30,21 +33,14 @@ public class CollisionController : MonoBehaviour {
                 txt.text = "Le <color=" + colorForPlayer + ">joueur " + winner.name.Remove(0,1) + "</color> a gagné !";
                 GameManager.instance.RestartScene();
             }
-
-            Debug.Log(_pm.PlayersAlive.Keys.Count + " joueurs restants");
-
-
         }
     }
 
 	// Use this for initialization
 	void Start () {
+	    GameManager.instance.EndRound = false;
 	    _uiAnimator = GameObject.Find("Canvas").GetComponent<Animator>();
 	    _animator = Camera.main.GetComponent<Animator>();
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
 }

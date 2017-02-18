@@ -11,7 +11,6 @@ using Random = UnityEngine.Random;
 public class PlayerManager : MonoBehaviour {
 
     public GameObject PlayerPrefab;
-    public List<Color> AvailableColors;
 
     private List<Transform> _spawnPoints;
     public Dictionary<string, GameObject> PlayersAlive;
@@ -28,7 +27,7 @@ public class PlayerManager : MonoBehaviour {
 
     public void Start() {
         _spawnPoints = new List<Transform>();
-	    PlayersAlive = new Dictionary<string, GameObject>();
+        PlayersAlive = new Dictionary<string, GameObject>();
 	    foreach(GameObject go in GameObject.FindGameObjectsWithTag("Respawn"))
 	    {
             _spawnPoints.Add(go.transform);
@@ -37,34 +36,47 @@ public class PlayerManager : MonoBehaviour {
     }
 
     private void SpawnPlayers(int nbPlayers) {
-        if(GameManager.instance.Players.ContainsKey("P1")) Debug.Log(GameManager.instance.Players["P1"].GetComponent<PlayerPrefs>().PlayerColor);
-        for (var i = 1; i <= nbPlayers; i++) {
-            var index = Random.Range(0, _spawnPoints.Count - 1);
-            GameObject instance;
-            if (GameManager.instance.NbPlayers != GameManager.instance.Players.Count) {
-                instance = Instantiate(PlayerPrefab, Vector3.zero, Quaternion.identity);
+        if (!GameManager.instance.ArePlayerAlreadyChosen) {
+            for (var i = 1; i <= nbPlayers; i++) {
+                var index = Random.Range(0, _spawnPoints.Count - 1);
+                var instance = Instantiate(PlayerPrefab, Vector3.zero, Quaternion.identity);
+                instance.name = "P" + i;
+                instance.GetComponent<PlayerPrefs>().PlayerName = instance.name;
+                instance.GetComponent<PlayerPrefs>().PlayerColor =
+                ExtensionsMethods.Random(ref GameManager.instance.AvailableColors);
+                var head = instance.transform.FindChild("Head");
+                head.GetComponent<SnakeController>().Dead = true;
+                var pInfos = new GameManager.PlayerInformations();
+                pInfos.PlayerColor = instance.GetComponent<PlayerPrefs>().PlayerColor;
+                pInfos.PlayerName = instance.GetComponent<PlayerPrefs>().PlayerName;
+                GameManager.instance.PlayerInfo.Add(instance.name, pInfos);
+                PlayersAlive.Add(instance.name, instance);
+                head.position = _spawnPoints[index].position;
+                head.rotation = Quaternion.Euler(new Vector3(0, 0, Random.Range(0, 361)));
+                _spawnPoints.RemoveAt(index);
             }
-            else {
-                instance = Instantiate(GameManager.instance.Players["P" + i], Vector3.zero, Quaternion.identity);
-            }
-            instance.name = "P" + i;
-            instance.GetComponent<PlayerPrefs>().PlayerName = instance.name;
-            var pColor = ExtensionsMethods.Random(ref AvailableColors);
-            if (GameManager.instance.NbPlayers != GameManager.instance.PlayersColors.Count) {
-                GameManager.instance.PlayersColors.Add(instance.name, pColor);
-            }
+            GameManager.instance.ArePlayerAlreadyChosen = true;
 
-            instance.GetComponent<PlayerPrefs>().PlayerColor = GameManager.instance.PlayersColors[instance.name];
-            var head = instance.transform.FindChild("Head");
-            head.GetComponent<SnakeController>().Dead = true;
-            head.position = _spawnPoints[index].position;
-            head.rotation = Quaternion.Euler(new Vector3(0,0, Random.Range(0,361)));
-            PlayersAlive.Add(instance.name, instance);
-            if (GameManager.instance.NbPlayers != GameManager.instance.Players.Count) {
-                GameManager.instance.Players.Add(instance.name, instance);
-            }
-            _spawnPoints.RemoveAt(index);
         }
+        else {
+            foreach (var pInfo in GameManager.instance.PlayerInfo.OrderBy(pair => pair.Key)) {
+                var index = Random.Range(0, _spawnPoints.Count - 1);
+                var instance = Instantiate(PlayerPrefab, Vector3.zero, Quaternion.identity);
+                instance.name = pInfo.Key;
+                instance.GetComponent<PlayerPrefs>().PlayerName = instance.name;
+                instance.GetComponent<PlayerPrefs>().PlayerColor = pInfo.Value.PlayerColor;
+                var head = instance.transform.FindChild("Head");
+                head.GetComponent<SnakeController>().Dead = true;
+                PlayersAlive.Add(instance.name, instance);
+                head.position = _spawnPoints[index].position;
+                head.rotation = Quaternion.Euler(new Vector3(0, 0, Random.Range(0, 361)));
+                _spawnPoints.RemoveAt(index);
+            }
+        }
+        foreach (var player in GameManager.instance.PlayerInfo.OrderBy(pair => pair.Key)) {
+            Debug.Log("Info sur " + player.Value.PlayerName + " : Couleur : " + player.Value.PlayerColor);
+        }
+
         switch (GameManager.instance.NbPlayers) {
             case 2:
                 GameObject.Find("ScoreP1").SetActive(true);
@@ -89,13 +101,11 @@ public class PlayerManager : MonoBehaviour {
         StartCoroutine(StartGame());
     }
 
-    public void RemovePlayer(string playerName) {
-        PlayersAlive.Remove(playerName);
-    }
 
     IEnumerator StartGame(float delay = 2f) {
         yield return new WaitForSeconds(delay);
-        foreach (var player in PlayersAlive.Values) {
+        var players = GameObject.FindGameObjectsWithTag("Player");
+        foreach (var player in players) {
             var head = player.transform.FindChild("Head");
             head.GetComponent<SnakeController>().Dead = false;
             Destroy(head.transform.FindChild("arrow").gameObject);

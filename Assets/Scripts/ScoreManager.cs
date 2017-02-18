@@ -16,7 +16,7 @@ public class ScoreManager : MonoSingleton<ScoreManager> {
         Scores[playerName] += amount;
     }
 
-    public void RemovecoreTo(string playerName, int amount) {
+    public void RemoveScoreTo(string playerName, int amount) {
         Scores[playerName] -= amount;
     }
 

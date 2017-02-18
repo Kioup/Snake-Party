@@ -1,16 +1,30 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoSingleton<GameManager> {
 
     public int NbPlayers = 2;
-    public Dictionary<string, Color> PlayersColors;
-    public Dictionary<string, GameObject> Players;
+    public List<Color> AvailableColors;
+    public bool ArePlayerAlreadyChosen;
+    public bool EndRound;
+
+
+    [Serializable]
+    public struct PlayerInformations {
+        public string PlayerName;
+        public Color PlayerColor;
+    }
+
+    public Dictionary<string, PlayerInformations> PlayerInfo;
+
 
     public override void Init() {
-        PlayersColors = new Dictionary<string, Color>();
-        Players = new Dictionary<string, GameObject>();
+        EndRound = false;
+        ArePlayerAlreadyChosen = false;
+        AvailableColors = AvailableColors ?? new List<Color>{Color.red, Color.green, Color.yellow, Color.cyan};
+        PlayerInfo = new Dictionary<string, PlayerInformations>();
     }
 
 
