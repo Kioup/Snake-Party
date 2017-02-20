@@ -365,7 +365,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DistanceBetweenPoints: 0.1
-  ChanceBetweenGap: 35
+  TimeBetweenCreateGap: 5
+  ChanceBetweenGap: 53.7
   TimeBetweenGap: 0.4
 --- !u!114 &114203697975537412
 MonoBehaviour:

@@ -8,6 +8,7 @@ using Random = UnityEngine.Random;
 public class Tail : MonoBehaviour {
 
     public float DistanceBetweenPoints = 0.1f;
+    public float TimeBetweenCreateGap = 5f;
     private Transform _head;
 
     public float ChanceBetweenGap = 35f;
@@ -28,8 +29,9 @@ public class Tail : MonoBehaviour {
         _lineRenderer = GetComponent<LineRenderer>();
         _col = GetComponent<EdgeCollider2D>();
         _points = new List<Vector2>();
+        ChanceBetweenGap = Random.Range(30, 51);
         AddPoint();
-        InvokeRepeating("InvokeCreateGap", 5f, 5f);
+        InvokeRepeating("InvokeCreateGap", TimeBetweenCreateGap, TimeBetweenCreateGap);
     }
 
     // Update is called once per frame
@@ -48,7 +50,7 @@ public class Tail : MonoBehaviour {
     }
 
     private void InvokeCreateGap() {
-//        Debug.Log("Invoke CreateGap()");
+        Debug.Log("InvokeCreateGap");
         StartCoroutine(CreateGap());
     }
 
